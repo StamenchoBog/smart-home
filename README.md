@@ -46,7 +46,7 @@ Repository: [External Systems](external_systems/README.md)
 
 The `External Systems` Infra repository contains the necessary code and configurations for provisioning the cloud infrastructure. It includes scripts for setting up databases, deploying the Home Assistant application, and configuring the required services to receive and process data from the MQTT broker. The Cloud Infra repository ensures that data is efficiently stored and made accessible through graphical representations and other informative displays using Home Assistant.
 
-For more information about this part of the project, check the following [documentation](external_systems/README.mdd) present in the same repository.
+For more information about this part of the project, check the following [documentation](external_systems/README.md) present in the same repository.
 
 ## Getting Started
 
