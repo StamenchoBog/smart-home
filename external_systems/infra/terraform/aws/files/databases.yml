@@ -1,0 +1,29 @@
+---
+version: "3.9"
+
+services:
+  # https://docs.influxdata.com/influxdb/v2.7/get-started/
+  influxdb:
+      container_name: influxdb
+      image: influxdb:2.7.1
+      restart: unless-stopped
+      ports:
+        - "8086:8086"
+      environment:
+        - TZ=Europe/Skopje
+        - DOCKER_INFLUXDB_INIT_MODE=setup
+        - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER}
+        - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+        - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+        - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+        - INFLUXD_TLS_CERT=/etc/ssl/full_chain.pem
+        - INFLUXD_TLS_KEY=/etc/ssl/private_key.pem
+      volumes:
+        - /etc/ssl/certs/fullchain.example.com.pem:/etc/ssl/full_chain.pem
+        - /etc/ssl/certs/example.com.pk.pem:/etc/ssl/private_key.pem
+        - /etc/influxdb/data:/var/lib/influxdb2
+        - /etc/influxdb/config/:/etc/influxdb2
+      ulimits:
+        nofile:
+          soft: 32768
+          hard: 32768

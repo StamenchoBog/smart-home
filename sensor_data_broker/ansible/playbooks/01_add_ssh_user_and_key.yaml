@@ -1,0 +1,74 @@
+---
+- hosts: LOCAL_LAN_BROKERS
+  gather_facts: true
+  become: true
+
+  ###### Variables ######
+
+  ###### Tasks ######
+  tasks:
+    - name: Perform full patching
+      package:
+        name: "*"
+        state: latest
+
+    - name: Check if packages required for playbook are installed
+      ansible.builtin.package:
+        name:
+          - firewalld
+        state: latest
+
+    - name: Add admin group
+      group:
+        name: admin
+        state: present
+
+    - name: Add local user
+      user:
+        name: admin
+        group: admin
+        shell: /bin/bash
+        home: /home/admin
+        create_home: true
+        state: present
+
+    - name: Add SSH public key for user`
+      authorized_key:
+        user: admin
+        key: "{{ lookup('file', '<YOUR_SSH_KEY>') }}"
+        state: present
+
+    - name: Add sudoer rule for local user
+      copy:
+        dest: /etc/sudoers.d/admin
+        src: ../files/etc/ssh/sudoers.d/admin
+        owner: root
+        group: root
+        mode: 0440
+        validate: /usr/sbin/visudo -csf %s
+
+    - name: Add hardened SSH config
+      copy:
+        dest: /etc/ssh/sshd_config
+        src: ../files/etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: 0600
+      notify: Reload SSH
+
+    - name: Start and enable firewalld.
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Reboot the machine (Wait for 5 min)
+      reboot:
+        reboot_timeout: 300
+
+  ###### Handlers ######
+  handlers:
+    - name: Reload SSH
+      service:
+        name: sshd
+        state: reloaded

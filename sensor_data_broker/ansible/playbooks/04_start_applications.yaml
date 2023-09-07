@@ -1,0 +1,41 @@
+---
+
+- hosts: LOCAL_LAN_BROKERS
+  become: true
+  gather_facts: true
+
+  ###### Variables ######
+
+  ###### Tasks ######
+  tasks:
+    - name: Create dependant folders
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        state: "{{ item.state }}"
+        recurse: true
+      loop:
+        - path: /etc/mosquitto/config
+          owner: mosquitto
+          group: mosquitto
+          state: directory
+
+    - name: Move configuration for applications
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        # Mosquitto configuration
+        - src: ../../config/mosquitto/mosquitto.conf
+          dest: /etc/mosquitto/config/mosquitto.conf
+
+    - name: Copy Docker Compose file
+      ansible.builtin.copy:
+        src: ../../docker-compose.yaml
+        dest: /home/admin/docker-compose.yaml
+
+    - name: Deploy Docker-compose stack
+      community.docker.docker_compose:
+        project_src: /home/admin/
+      register: output

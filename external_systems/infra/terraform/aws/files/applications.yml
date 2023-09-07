@@ -1,0 +1,17 @@
+---
+version: "3.9"
+
+services:
+  # https://www.home-assistant.io/
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:latest
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8123:8123"
+    environment:
+      - TZ=Europe/Skopje
+    volumes:
+      - /etc/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro

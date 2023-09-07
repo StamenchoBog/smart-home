@@ -1,0 +1,47 @@
+---
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Example configuration.yaml entry
+my:
+
+automation: !include automations.yaml
+
+# HTTP config
+http:
+  ip_ban_enabled: true
+  login_attempts_threshold: 5
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 0.0.0.0/0
+    - 172.19.0.0/16
+    - 172.18.0.0/16
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+    cache: true
+    cache_dir: /config/tts
+    time_memory: 300
+
+# Recorders
+recorder:
+  db_url: !secret mariadb
+  purge_keep_days: 10   # default
+
+# History
+influxdb:
+  api_version: 2
+  ssl: false
+  host: !secret influxdb_host
+  port: 443
+  token: !secret influxdb_token
+  organization: !secret influx_org
+  bucket: homeassistant
+  tags:
+    source: HomeAssistant
+  tags_attributes:
+    - friendly_name
+  default_measurement: units

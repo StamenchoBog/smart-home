@@ -1,0 +1,63 @@
+stages:
+  - fmt_and_lint_check
+  - security_analysis
+  - validate
+
+# Gitlab CI templates
+# All templates can be viewed here: https://gitlab.com/gitlab-org/gitlab/-/tree/master/lib/gitlab/ci/templates
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+### Stage `security_analysis` jobs
+lint_check:
+  stage: fmt_and_lint_check
+  allow_failure: true
+  image:
+    name: ghcr.io/terraform-linters/tflint-bundle:latest
+    entrypoint:
+        - '/usr/bin/env'
+        - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  before_script:
+    - tflint --init
+  script:
+    # Scan the infra folder for lint error and misplacement
+    - cd ./infra/terraform/
+    - tflint --recursive
+
+### Stage `security_analysis` jobs
+dependency_scanning:
+  stage: security_analysis
+  allow_failure: false
+
+.secret-analyzer:
+  stage: security_analysis
+  allow_failure: false
+
+tfsec_scanning:
+  stage: security_analysis
+  allow_failure: false
+  image:
+    name: aquasec/tfsec
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - tfsec --minimum-severity HIGH -f junit --out tfsec.test.xml
+  artifacts:
+    reports:
+      junit: "tfsec.test.xml"
+    paths:
+      - tfsec.test.xml
+
+### Stage `validate` jobs
+terraform_validate:
+  stage: validate
+  allow_failure: false
+  image: 
+    name: hashicorp/terraform:1.4
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - cd ./infra/terraform/aws && terraform init -backend=false && terraform validate

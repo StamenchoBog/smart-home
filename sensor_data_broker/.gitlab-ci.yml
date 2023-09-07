@@ -1,0 +1,45 @@
+---
+stages:
+  - security_analysis
+  - lint_checks
+
+# Gitlab CI templates
+# All templates can be viewed here: https://gitlab.com/gitlab-org/gitlab/-/tree/master/lib/gitlab/ci/templates
+include:
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+dependency_scanning:
+  stage: security_analysis
+  allow_failure: false
+
+.secret-analyzer:
+  stage: security_analysis
+  allow_failure: false
+
+yamllint_check:
+  stage: lint_checks
+  allow_failure: false
+  image:
+    name: alpine:latest
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - apk update && apk upgrade
+    - apk add --upgrade yamllint
+    - yamllint -c .yamllint.yaml *
+
+shell_lint_check:
+  stage: lint_checks
+  allow_failure: false
+  image:
+    name: alpine:latest
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  script:
+    - apk update && apk upgrade
+    - apk add --upgrade shellcheck
+    - find . -name .git -type d -prune -o -type f -name \*.sh -print0 |
+      xargs -0 -r -n1 shellcheck
