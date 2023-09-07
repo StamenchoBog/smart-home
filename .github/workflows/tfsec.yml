@@ -21,7 +21,7 @@ jobs:
       - name: tfsec scan
         uses: aquasecurity/tfsec-sarif-action@v0.1.0
         with:
-          working_directory: infra/terraform
+          working_directory: external_systems/infra/terraform
           sarif_file: tfsec.sarif          
 
       - name: Upload SARIF file
