@@ -28,25 +28,25 @@ The LAN broker and the Cloud infrastructure are securely connected using a zero-
 
 ## Project diagram
 
-![Diagram](files/diagrams/energy_monitoring_system_diagram.png)
+![Diagram](docs/diagrams/energy_monitoring_system_diagram.png)
 
 ## Repository Overview
 
 ### Repository `Sensor Broker`
 
-Repository: [Sensor data broker](https://gitlab.com/energy-monitoring-system/data_broker)
+Repository: [Sensor data broker](sensor_data_broker/README.md)
 
 The `Sensor Data Broker` repository houses the code and configuration files for setting up the Raspberry Pi as a local MQTT broker. The device (RaspberryPi) is hardened and configured to be secure and only accessible from the local area network. The broker receives sensor data from Tasmota devices connected within the local network. It then securely forwards this data to the Cloud infrastructure for further processing and visualization. The code includes MQTT message handling, security mechanisms (username and password authentication), and connectivity with the Cloud infrastructure using Tailscale VPN.
 
-For more information about this part of the project, check the following [documentation](https://gitlab.com/energy-monitoring-system/data_broker/-/blob/main/README.md) present in the same repository.
+For more information about this part of the project, check the following [documentation](sensor_data_broker/README.md) present in the same repository.
 
 ### Repository `External Systems`
 
-Repository: [External Systems](https://gitlab.com/energy-monitoring-system/external-systems)
+Repository: [External Systems](external_systems/README.md)
 
 The `External Systems` Infra repository contains the necessary code and configurations for provisioning the cloud infrastructure. It includes scripts for setting up databases, deploying the Home Assistant application, and configuring the required services to receive and process data from the MQTT broker. The Cloud Infra repository ensures that data is efficiently stored and made accessible through graphical representations and other informative displays using Home Assistant.
 
-For more information about this part of the project, check the following [documentation](https://gitlab.com/energy-monitoring-system/external-systems/-/blob/main/README.md) present in the same repository.
+For more information about this part of the project, check the following [documentation](external_systems/README.mdd) present in the same repository.
 
 ## Getting Started
 
