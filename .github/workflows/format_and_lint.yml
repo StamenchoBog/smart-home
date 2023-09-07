@@ -1,0 +1,17 @@
+name: Lint TF files
+on: [push]
+jobs:
+  lint-check:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/terraform-linters/tflint-bundle:latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Initialize TFlinter
+        run: tflint --init
+      
+      - name: Scan the terraform folder for lint error and misplacement
+        continue-on-error: true
+        working-directory: ./external_systems/infra/terraform
+        run: tflint --recursive 
