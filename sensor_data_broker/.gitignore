@@ -22,13 +22,15 @@
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-[Ss]cripts
 pyvenv.cfg
 .venv
 pip-selfcheck.json
 
 # Environment file
 .env
+
+# Mosquitto password file (contains credentials)
+config/mosquitto/passwd
 
 # DS_Store files
 .DS_Store
