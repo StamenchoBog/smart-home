@@ -49,7 +49,7 @@ Check the following [page](https://mosquitto.org/documentation/) for more inform
 In order to prepare the Raspberry Pi device or any device running a Debian base OS (in this example Raspberry Pi OS) with aptitude as a package manages, you will need to follow the below steps.
 
 1. Install ansible on broker
-    - Run the `install_ansible.sh` script (located in {root-directory}/scripts/bash/) that will install ansible on the device, so you can control it and configure it using Ansible. Go into the folder where the script is located and run `ssh user@host 'bash -s' < /path/script.sh` in order to run in remotely.
+    - Run the `install_ansible.sh` script (located in {root-directory}/scripts/) that will install ansible on the device, so you can control it and configure it using Ansible. Go into the folder where the script is located and run `ssh user@host 'bash -s' < /path/script.sh` in order to run in remotely.
 
 2. Run the `01_add_ssh_user_and_key.yaml` that will execute the included playbooks which will install `firewalld` and upload a SSH key that will be later on used for connection. Don't forget to change the key on `line:36` located in the playbook, with the path to your desired SSH key.
 
